@@ -1,0 +1,33 @@
+---
+Name: module-notifications-model
+---
+Modular\Models\Notification:
+  extensions:
+    - Modular\Fields\SenderEmail
+    - Modular\Fields\Title
+    - Modular\Fields\Content
+    - Modular\Fields\QueueStatus
+    - Modular\Fields\TemplateName
+    - Modular\Fields\SentDate
+Modular\Models\Recipient:
+  extensions:
+    - Modular\Fields\Email
+    - Modular\Relationships\HasMember
+
+---
+Name: modular-notifications-relationships
+---
+Modular\Models\Notification:
+  has_many:
+    Recipients: Modular\Models\Recipient
+
+---
+Name: modular-notifications-back-relationships
+---
+Member:
+  has_many:
+    Notifications: Modular\Models\Notification
+
+Modular\Models\Recipient:
+  has_one:
+    Notification: Modular\Models\Notification
