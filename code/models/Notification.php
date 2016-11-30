@@ -16,20 +16,28 @@ use Modular\Model;
  * @property string Title
  * @property string Content
  * @property string TemplateName
- * @property string TemplateData
+ * @property string Data
  * @method \DataList|\ArrayList Recipients()
  */
-class Notification extends Model {
-	const NotifyImmediate = 1;
-	const NotifyQueued    = 2;
+class Notification extends Model implements \Modular\Interfaces\Notification {
+	private static $db = [
+		'Options' => 'Varchar(255)',
+	    'Data' => 'Text'
+	];
 
-	const DefaultNotificationMode = 3;  // immediate and queued
-
-	private static $notification_mode = self::DefaultNotificationMode;
-
-	public static function notification_mode() {
-		return static::config()->get('notification_mode');
+	public static function create() {
+		return \Injector::inst()->createWithArgs('NotificationsModel', func_get_args());
 	}
+
+	public function setOptions($options) {
+		$this->Options = $options;
+		return $this;
+	}
+
+	public function getOptions() {
+		return $this->Options;
+	}
+
 	/**
 	 * Return a list of Email addresses from related Recipients
 	 *
@@ -37,6 +45,35 @@ class Notification extends Model {
 	 */
 	public function getTo() {
 		return $this->Recipients()->column('Email');
+	}
+
+	public function setTemplateName($templateName) {
+		$this->TemplateName = $templateName;
+		return $this;
+	}
+
+	public function getTemplateName() {
+		return $this->TemplateName;
+	}
+
+	/**
+	 * Returns decoded data
+	 *
+	 * @return mixed
+	 */
+	public function getData() {
+		return json_decode($this->Data);
+	}
+
+	/**
+	 * Encode and store passed raw data.
+	 *
+	 * @param $rawData
+	 * @return $this
+	 */
+	public function setData($rawData) {
+		$this->Data = json_encode($rawData);
+		return $this;
 	}
 
 	/**
@@ -83,32 +120,12 @@ class Notification extends Model {
 		return $this;
 	}
 
-	public function getBody() {
+	public function getMessage() {
 		return $this->Content;
 	}
 
-	public function setBody($body) {
-		$this->Body = $body;
-		return $this;
-	}
-
-	/**
-	 * Returns decoded data
-	 *
-	 * @return mixed
-	 */
-	public function getData() {
-		return json_decode($this->TemplateData);
-	}
-
-	/**
-	 * Encode and store passed raw data.
-	 *
-	 * @param $rawData
-	 * @return $this
-	 */
-	public function setData($rawData) {
-		$this->TemplateData = json_encode($rawData);
+	public function setMessage($message) {
+		$this->Content = $message;
 		return $this;
 	}
 

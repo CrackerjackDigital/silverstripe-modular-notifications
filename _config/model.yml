@@ -1,5 +1,5 @@
 ---
-Name: module-notifications-model
+Name: modular-notifications-model
 ---
 Modular\Models\Notification:
   extensions:

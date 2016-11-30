@@ -1,0 +1,8 @@
+---
+Name: modular-notifications-config
+---
+Injector:
+  NotificationService:
+    class: \Modular\Services\Notification
+  NotificationModel:
+    class: \Modular\Models\Notification
