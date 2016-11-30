@@ -4,8 +4,11 @@ namespace Modular\Build;
 use Modular\Models\Build;
 
 class Notifications extends Build {
-	const DefaultAdminPermissionCode = 'CAN_ADMIN_NOTIFICATIONS';
+	const DefaultAdminPermissionCode = 'CAN_ADMIN_Notifications';
 	const DefaultAdminGroupCode      = 'admin-notifications';
+	const DefaultParentGroupCode = 'social';
+
+	private static $parent_group_code = self::DefaultParentGroupCode;
 
 	private static $permission_code = self::DefaultAdminPermissionCode;
 
@@ -28,11 +31,14 @@ class Notifications extends Build {
 
 		$groupCode = $this->config()->get('group_code');
 
+		$parent = \Group::get()->filter('Code', $this->config()->get('parent_group_code'))->first();
+
 		if (!$group = \Group::get()->filter('Code', $groupCode)->first()) {
 			$group = \Group::create([
 				'Title'       => 'Notification Administrators',
 				'Description' => 'Member of this group can administer notifications',
 				'Code'        => $groupCode,
+				'ParentID'    => $parent ? $parent->ID : null,
 			]);
 			$group->Permissions()->add($permission);
 			$group->write();
