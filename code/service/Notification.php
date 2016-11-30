@@ -70,8 +70,8 @@ class Notification extends Service {
 			$result = false;
 		}
 		$notification->update([
-			QueueStatus::field_name() => $result ? QueueStatus::StatusCompleted : QueueStatus::StatusFailed,
-			SentDate::field_name()    => $result ? date('Y-m-d h:i:s') : '',
+			QueueStatus::single_field_name() => $result ? QueueStatus::StatusCompleted : QueueStatus::StatusFailed,
+			SentDate::single_field_name()    => $result ? date('Y-m-d h:i:s') : '',
 		])->write();
 
 		return $notification;
@@ -88,15 +88,15 @@ class Notification extends Service {
 
 			/** @var Notification|\Modular\Interfaces\Notification $notification */
 			$notification = \Modular\Models\Notification::create()->filter([
-				QueueStatus::field_name() => QueueStatus::StatusQueued,
-				SentDate::field_name()    => '',
+				QueueStatus::single_field_name() => QueueStatus::StatusQueued,
+				SentDate::single_field_name()    => '',
 			])->sort('Created asc')->first();
 
 			if ($notification) {
 				$processed++;
 
 				$notification->update([
-					QueueStatus::field_name() => QueueStatus::StatusProcessing,
+					QueueStatus::single_field_name() => QueueStatus::StatusProcessing,
 				])->write();
 
 				$subject = $notification->getSubject();
@@ -117,7 +117,7 @@ class Notification extends Service {
 					$this->debug_error("Failed to send queued notification with subject '$subject'");
 
 					$notification->update([
-						QueueStatus::field_name() => QueueStatus::StatusFailed,
+						QueueStatus::single_field_name() => QueueStatus::StatusFailed,
 					])->write();
 
 				}
