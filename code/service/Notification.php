@@ -18,9 +18,8 @@ class Notification extends Service {
 
 	private static $pause_seconds = 2;
 
-	private static $options = \Modular\Interfaces\Notification::NotifyImmediate
-		| \Modular\Interfaces\Notification::NotifyEnqueue
-		| \Modular\Interfaces\Notification::NotifyEmail;
+	// Immediate, Queue, Email
+	private static $options = \Modular\Interfaces\Notification::DefaultNotificationOptions;
 
 	/**
 	 * @param \Modular\Interfaces\Notification $notification
