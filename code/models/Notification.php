@@ -25,9 +25,12 @@ class Notification extends Model implements \Modular\Interfaces\Notification {
 	    'Data' => 'Text'
 	];
 
+	const ServiceName = '';
+
 	public static function create() {
-		return \Injector::inst()->createWithArgs('NotificationsModel', func_get_args());
+		return \Injector::inst()->createWithArgs(static::ServiceName ?: 'NotificationModel', func_get_args());
 	}
+
 
 	public function setOptions($options) {
 		$this->Options = $options;

@@ -1,11 +1,15 @@
 <?php
+namespace Modular;
+
+use Modular\Models\Notification;
+
 trait notifies {
 	/**
 	 * @param null   $level
 	 * @param string $source
 	 * @return \Modular\Debugger
 	 */
-	abstract public function debugger($level = Modular\Debugger::LevelFromEnv, $source = '');
+	abstract public function debugger($level = Debugger::LevelFromEnv, $source = '');
 
 	/**
 	 * Queue a Notification model with passed and derived parameters.
@@ -20,7 +24,7 @@ trait notifies {
 	 */
 	protected function notify($sender, $recipients, $subject, $message, $templateName = '', $data = [], $options = null) {
 		/** @var \Modular\Interfaces\Notification $notification */
-		$notification = \Injector::inst()->create('NotificationModel');
+		$notification = Notification::create();
 
 		$notification->setFrom($sender);
 		$notification->setTo($recipients);
