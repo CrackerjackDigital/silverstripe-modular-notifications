@@ -3,12 +3,13 @@ Name: modular-notifications-model
 ---
 Modular\Models\Notification:
   extensions:
-    - Modular\Fields\SenderEmail
     - Modular\Fields\Title
+    - Modular\Fields\SenderEmail
+    - Modular\Fields\SentDate
     - Modular\Fields\Content
     - Modular\Fields\QueueStatus
     - Modular\Fields\TemplateName
-    - Modular\Fields\SentDate
+
 Modular\Models\Recipient:
   extensions:
     - Modular\Fields\Email
@@ -31,3 +32,4 @@ Member:
 Modular\Models\Recipient:
   has_one:
     Notification: Modular\Models\Notification
+

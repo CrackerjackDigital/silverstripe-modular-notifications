@@ -2,6 +2,7 @@
 namespace Modular;
 
 use Modular\Models\Notification;
+use Modular\Services\Notification as NotificationService;
 
 trait notifies {
 	/**
@@ -48,7 +49,7 @@ trait notifies {
 			$notification->setData($data);
 			$notification->setOptions($options);
 
-			return \Modular\Services\Notification::factory()->add($notification);
+			return NotificationService::factory()->add($notification);
 		} else {
 			$this->debugger()->warn('notifies is not enabled on ' . get_class($this));
 		}
