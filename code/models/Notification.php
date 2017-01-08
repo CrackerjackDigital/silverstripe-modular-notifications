@@ -1,7 +1,10 @@
 <?php
 namespace Modular\Models;
 
+use Modular\Fields\QueueStatus;
+use Modular\Interfaces\Queueable;
 use Modular\Model;
+use Modular\Traits\custom_create;
 
 /**
  * Notification
@@ -17,21 +20,45 @@ use Modular\Model;
  * @property string Content
  * @property string TemplateName
  * @property string Data
+ * @property string QueueStatus
  * @method \DataList|\ArrayList Recipients()
  */
-class Notification extends Model implements \Modular\Interfaces\Notification {
+class Notification extends Model implements \Modular\Interfaces\Notification, Queueable {
+	use custom_create;
+	
 	private static $db = [
-		'Options' => 'Varchar(255)',
+		'Options' => 'Text',
 	    'Data' => 'Text'
 	];
 
-	const ServiceName = '';
-
+	private static $custom_class_name = '';
+	
+	/**
+	 * @return \Modular\Interfaces\Notification|$this
+	 */
 	public static function create() {
-		return \Injector::inst()->createWithArgs(static::ServiceName ?: 'NotificationModel', func_get_args());
+		return static::custom_create(func_num_args());
 	}
-
-
+	
+	public function getQueueStatus() {
+		return $this->QueueStatus;
+	}
+	
+	/**
+	 * Updates the QueueStatus and extraData fields and writes the model.
+	 *
+	 * @param string $status    one of the StatusABC constants
+	 * @param array  $extraData will be updated on the Queueable before writing, e.g. could be 'SentDate' for an email.
+	 * @return mixed
+	 * @throws \ValidationException
+	 */
+	public function updateQueueStatus($status, $extraData = []) {
+		$this->{QueueStatus::single_field_name()} = $status;
+		$this->update($extraData);
+		$this->write();
+		return $this;
+	}
+	
 	public function setOptions($options) {
 		$this->Options = $options;
 		return $this;
@@ -78,12 +105,13 @@ class Notification extends Model implements \Modular\Interfaces\Notification {
 		$this->Data = json_encode($rawData);
 		return $this;
 	}
-
+	
 	/**
 	 * Sets list of Recipients from provided email addresses.
 	 *
 	 * @param array|string|\SS_List $to single or array of Email addresses or objects with an 'Email' field
 	 * @return $this
+	 * @throws \ValidationException
 	 */
 	public function setTo($to) {
 		if ($to instanceof \SS_List) {

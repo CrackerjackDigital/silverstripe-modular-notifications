@@ -6,7 +6,7 @@ interface Notification extends \DataObjectInterface {
 	const NotifyEnqueue   = 2;
 	const NotifyEmail     = 4;
 
-	const DefaultNotificationOptions = 7;  // immediate, enqueue and email
+	const DefaultNotificationOptions = 6;  // enqueue and email
 
 	public function setFrom($from);
 

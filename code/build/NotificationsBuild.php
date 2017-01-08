@@ -40,7 +40,7 @@ class NotificationsBuild extends Builder  {
 			if (!$group = \Group::get()->filter('Code', $groupCode)->first()) {
 				$group = \Group::create([
 					'Title'       => 'Notification Administrators',
-					'Description' => 'Member of this group can administer notifications',
+					'Synopsis' => 'Member of this group can administer notifications',
 					'Code'        => $groupCode,
 					'ParentID'    => $parent ? $parent->ID : null,
 				]);
