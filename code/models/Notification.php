@@ -2,7 +2,6 @@
 namespace Modular\Models;
 
 use Modular\Fields\QueueStatus;
-use Modular\Interfaces\Queueable;
 use Modular\Model;
 use Modular\Traits\custom_create;
 
@@ -23,27 +22,27 @@ use Modular\Traits\custom_create;
  * @property string QueueStatus
  * @method \DataList|\ArrayList Recipients()
  */
-class Notification extends Model implements \Modular\Interfaces\Notification, Queueable {
+class Notification extends Model implements \Modular\Interfaces\Notification {
 	use custom_create;
-	
+
 	private static $db = [
 		'Options' => 'Text',
 	    'Data' => 'Text'
 	];
 
 	private static $custom_class_name = '';
-	
+
 	/**
 	 * @return \Modular\Interfaces\Notification|$this
 	 */
 	public static function create() {
 		return static::custom_create(func_num_args());
 	}
-	
+
 	public function getQueueStatus() {
 		return $this->QueueStatus;
 	}
-	
+
 	/**
 	 * Updates the QueueStatus and extraData fields and writes the model.
 	 *
@@ -58,7 +57,7 @@ class Notification extends Model implements \Modular\Interfaces\Notification, Qu
 		$this->write();
 		return $this;
 	}
-	
+
 	public function setOptions($options) {
 		$this->Options = $options;
 		return $this;
@@ -105,7 +104,7 @@ class Notification extends Model implements \Modular\Interfaces\Notification, Qu
 		$this->Data = json_encode($rawData);
 		return $this;
 	}
-	
+
 	/**
 	 * Sets list of Recipients from provided email addresses.
 	 *
