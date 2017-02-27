@@ -1,5 +1,5 @@
 <?php
-namespace Modular;
+namespace Modular\Traits;
 
 use Modular\Extensions\Service\EmailNotification;
 use Modular\Extensions\Service\Enqueue;

@@ -52,7 +52,7 @@ class Notification extends Model implements \Modular\Interfaces\Notification {
 	 * @throws \ValidationException
 	 */
 	public function updateQueueStatus($status, $extraData = []) {
-		$this->{QueueStatus::single_field_name()} = $status;
+		$this->{QueueStatus::field_name()} = $status;
 		$this->update($extraData);
 		$this->write();
 		return $this;
