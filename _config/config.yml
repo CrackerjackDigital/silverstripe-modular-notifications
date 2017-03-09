@@ -3,6 +3,6 @@ Name: modular-notifications-config
 ---
 Injector:
   NotificationService:
-    class: \Modular\Services\Notification
+    class: \Modular\Services\Notifications
   NotificationModel:
     class: \Modular\Models\Notification

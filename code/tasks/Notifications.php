@@ -3,7 +3,7 @@ namespace Modular\Tasks;
 
 use Modular\emailer;
 use Modular\Exceptions\Exception;
-use Modular\Services\Notification as NotificationService;
+use Modular\Services\Notifications as NotificationService;
 use Modular\Task;
 use Modular\trackable;
 

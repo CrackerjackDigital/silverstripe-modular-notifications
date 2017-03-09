@@ -1,38 +1,34 @@
 <?php
 namespace Modular\Traits;
 
+use Modular\Debugger;
 use Modular\Extensions\Service\EmailNotification;
 use Modular\Extensions\Service\Enqueue;
 use Modular\Models\Notification;
-use Modular\Services\Notification as NotificationService;
+use Modular\Services\Notifications as NotificationService;
 
 trait notifies {
 	// if set on the exhibiting class these will be passed through to the Notification service, overriding
 	// options configured on there.
 	private static $notifies_options = 0;
-	
+
 	/**
 	 * @param null   $level
 	 * @param string $source
 	 * @return \Modular\Debugger
 	 */
 	abstract public function debugger($level = Debugger::LevelFromEnv, $source = '');
-	
+
 	/**
-	 * Return the current config.notifies_enabled status or set it and return the previous state.
+	 * Return if notifies is enabled on the exhibiting model/extension. This could be overridden
+	 * in the model/extension class e.g. to also check the model being extended for finer control.
 	 *
-	 * @param bool $enable
-	 * @return bool current or previous state if setting new one
+	 * @return bool
 	 */
-	public static function notifies_enabled($enable = null) {
-		$old = (bool)\Config::inst()->get(get_called_class(), 'notifies_enabled');
-		if (is_bool($enable)) {
-			\Config::inst()->update(get_called_class(), 'notifies_enabled', $enable);
-		}
-		
-		return $old;
+	public function notifiesEnabled() {
+		return (bool)\Config::inst()->get(get_called_class(), 'notifies_enabled');
 	}
-	
+
 	/**
 	 * Return config.notifies_options from exhibiting object.
 	 * @return mixed
@@ -40,7 +36,7 @@ trait notifies {
 	public static function notifies_options() {
 		return static::config()->get('notifies_options');
 	}
-	
+
 	/**
 	 * Queue a Notification model with passed and derived parameters, the model and eventual sender handles most
 	 * of the work dealing with different parameters, options etc.
@@ -58,10 +54,10 @@ trait notifies {
 	 * @throws \ValidationException
 	 */
 	protected function notify($sender, $recipients, $subject, $message, $templateName = '', $data = [], $serviceOptions = null) {
-		if (static::notifies_enabled()) {
+		if ($this->notifiesEnabled()) {
 			/** @var Notification $notification */
 			$notification = Notification::create();
-			
+
 			$notification->setFrom($sender);
 			$notification->setTo($recipients);
 			$notification->setSubject($subject);
@@ -69,17 +65,17 @@ trait notifies {
 			$notification->setTemplateName($templateName);
 			$notification->setData($data);
 			$notification->setOptions($serviceOptions);
-			
+
 			if (Notification::NotifyImmediate === ( static::notifies_options() & Notification::NotifyImmediate )) {
 				NotificationService::request(EmailNotification::class, $notification, $serviceOptions);
 			} else {
 				NotificationService::request(Enqueue::class, $notification, $serviceOptions);
 			}
-			
+
 			return $notification;
 		} else {
 			$this->debugger()->warn('notifies is not enabled on ' . get_class($this));
 		}
 	}
-	
+
 }
