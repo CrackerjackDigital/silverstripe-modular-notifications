@@ -1,11 +1,11 @@
 <?php
 namespace Modular\Tasks;
 
-use Modular\emailer;
 use Modular\Exceptions\Exception;
 use Modular\Services\Notifications as NotificationService;
 use Modular\Task;
-use Modular\trackable;
+use Modular\Traits\emailer;
+use Modular\Traits\trackable;
 
 class Notifications extends Task {
 	use emailer;

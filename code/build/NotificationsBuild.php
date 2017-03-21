@@ -6,10 +6,10 @@ use Modular\Extensions\Model\Builder;
  *
  * @package Modular\Build
  */
-class NotificationsBuild extends Builder  {
+class NotificationsBuild extends Builder {
 	const DefaultAdminPermissionCode = 'CAN_ADMIN_Notifications';
 	const DefaultAdminGroupCode      = 'admin-notifications';
-	const DefaultParentGroupCode = 'social';
+	const DefaultParentGroupCode     = 'social';
 
 	private static $parent_group_code = self::DefaultParentGroupCode;
 
@@ -21,32 +21,32 @@ class NotificationsBuild extends Builder  {
 	 * Adds permissions to the database on /dev/build if they don't exist.
 	 */
 	public function requireDefaultRecords() {
-		if ($this->shouldRun()) {
-			$permissionCode = $this->config()->get('permission_code');
+		if ( $this->shouldRun() ) {
+			$permissionCode = $this->config()->get( 'permission_code' );
 
-			if (!$permission = \Permission::get()->filter('Code', $permissionCode)->first()) {
-				$permission = \Permission::create([
+			if ( ! $permission = \Permission::get()->filter( 'Code', $permissionCode )->first() ) {
+				$permission = \Permission::create( [
 					'Code' => $permissionCode,
 					'Type' => 1,
-				]);
+				] );
 				$permission->write();
-				\DB::alteration_message("Added permission '$permissionCode'", 'created');
+				\DB::alteration_message( "Added permission '$permissionCode'", 'created' );
 			}
 
-			$groupCode = $this->config()->get('group_code');
+			$groupCode = $this->config()->get( 'group_code' );
 
-			$parent = \Group::get()->filter('Code', $this->config()->get('parent_group_code'))->first();
+			$parent = \Group::get()->filter( 'Code', $this->config()->get( 'parent_group_code' ) )->first();
 
-			if (!$group = \Group::get()->filter('Code', $groupCode)->first()) {
-				$group = \Group::create([
-					'Title'       => 'Notification Administrators',
+			if ( ! $group = \Group::get()->filter( 'Code', $groupCode )->first() ) {
+				$group = \Group::create( [
+					'Title'    => 'Notification Administrators',
 					'Synopsis' => 'Member of this group can administer notifications',
-					'Code'        => $groupCode,
-					'ParentID'    => $parent ? $parent->ID : null,
-				]);
-				$group->Permissions()->add($permission);
+					'Code'     => $groupCode,
+					'ParentID' => $parent ? $parent->ID : null,
+				] );
+				$group->Permissions()->add( $permission );
 				$group->write();
-				\DB::alteration_message("Created group '$groupCode' with permission '$permissionCode'", 'created');
+				\DB::alteration_message( "Created group '$groupCode' with permission '$permissionCode'", 'created' );
 			}
 		}
 	}
