@@ -9,7 +9,7 @@ use Modular\Traits\emailer;
 
 class EmailNotification extends ServiceRequest {
 	use emailer;
-	
+
 	/**
 	 * Send the notification by email.
 	 *
@@ -23,8 +23,8 @@ class EmailNotification extends ServiceRequest {
 	protected function service($notification, $options = null, $requester = null) {
 		$notification->updateQueueStatus(QueueStatus::StatusProcessing);
 		$notification->write();
-		
-		$result = $this->emailer_send(
+
+		$result = $this->send(
 			$notification->getFrom(),
 			$notification->getTo(),
 			$notification->getSubject(),
@@ -33,7 +33,7 @@ class EmailNotification extends ServiceRequest {
 			$notification->getData(),
 			$error
 		);
-		
+
 		if ($result) {
 			$notification->updateQueueStatus(
 				QueueStatus::StatusCompleted,
@@ -41,7 +41,7 @@ class EmailNotification extends ServiceRequest {
 					SentDate::single_field_name() => SentDate::now()
 				]
 			);
-			
+
 		} else {
 			$notification->updateQueueStatus(
 				QueueStatus::StatusFailed,
@@ -50,10 +50,10 @@ class EmailNotification extends ServiceRequest {
 				]
 			);
 		}
-		
-		
+
+
 		$notification->write();
-		
+
 		return $result;
 	}
 }
