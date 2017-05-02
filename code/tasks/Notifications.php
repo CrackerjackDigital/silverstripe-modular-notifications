@@ -13,11 +13,11 @@ class Notifications extends Task {
 
 	private static $confirmation_token = '';
 
-	public function execute($request = null) {
+
+	public function execute($request = [], &$resultMessage = '') {
 		$this->trackable_start(__METHOD__);
 
-		$request = $request ?: \Controller::curr()->getRequest();
-		if (!$confirmationToken = !$request->requestVar('confirm')) {
+		if (!$confirmationToken = isset($request['confirm']) ? $request['confirm'] : '') {
 			$this->debug_fail(new Exception("No confirmation token provided"));
 		}
 		if ($confirmationToken != $this->config()->get('confirmation_token')) {
