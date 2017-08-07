@@ -7,7 +7,7 @@ Modular\Models\Notification:
     - Modular\Fields\SenderEmail
     - Modular\Fields\SentDate
     - Modular\Fields\Content
-    - Modular\Fields\QueueStatus
+    - Modular\Fields\QueuedState
     - Modular\Fields\TemplateName
 
 Modular\Models\Recipient:

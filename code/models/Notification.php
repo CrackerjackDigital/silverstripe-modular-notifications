@@ -1,7 +1,7 @@
 <?php
 namespace Modular\Models;
 
-use Modular\Fields\QueueStatus;
+use Modular\Fields\QueuedState;
 use Modular\Model;
 use Modular\Traits\custom_create;
 
@@ -52,7 +52,7 @@ class Notification extends Model implements \Modular\Interfaces\Notification {
 	 * @throws \ValidationException
 	 */
 	public function updateQueueStatus($status, $extraData = []) {
-		$this->{QueueStatus::field_name()} = $status;
+		$this->{QueuedState::field_name()} = $status;
 		$this->update($extraData);
 		$this->write();
 		return $this;
