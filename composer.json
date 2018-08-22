@@ -27,5 +27,10 @@
 	"extra": {
 		"installer-name": "modular-notifications"
 	},
+	"autoload": {
+		"files": [
+			"autoloader.php"
+		]
+	},
 	"minimum-stability": "dev"
 }
